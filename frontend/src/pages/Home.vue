@@ -1,4 +1,24 @@
-<script setup>
+<script lang="ts">
+export default {
+  name: 'Home',
+  components: {
+    // ...
+  },
+  data() {
+    return {
+      // ...
+    }
+  },
+  methods: {
+    // ...
+  },
+  computed: {
+    // ...
+  },
+  watch: {
+    // ...
+  }
+}
 </script>
 
 <template>

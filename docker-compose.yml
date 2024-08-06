@@ -7,7 +7,8 @@ services:
       - "3000:3000"
     volumes:
       - ./frontend:/app
-      - /app/node_modules
+      - frontend-node-modules:/app/node_modules
+
     depends_on:
       - backend
     environment:
@@ -20,7 +21,7 @@ services:
       - "3001:3001"
     volumes:
       - ./backend:/app
-      - /app/node_modules
+      - backend-node-modules:/app/node_modules
     environment:
       - NODE_ENV=development
       - MYSQL_HOST=mysql
@@ -43,3 +44,5 @@ services:
 
 volumes:
   mysql-data:
+  frontend-node-modules:
+  backend-node-modules:
