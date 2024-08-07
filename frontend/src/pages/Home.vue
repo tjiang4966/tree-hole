@@ -23,6 +23,6 @@ export default {
 
 <template>
   <div>
-    Home Page
+    Home Page Updated
   </div>
 </template>

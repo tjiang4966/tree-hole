@@ -1,33 +1,24 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "main": "dist/main.js",
+  "main": "index.js",
+  "license": "MIT",
   "scripts": {
-    "dev": "nodemon",
-    "start": "nest start",
-    "start:dev": "nest start --watch",
-    "build": "tsc -p tsconfig.build.json"
+    "start": "ts-node src/app.ts",
+    "dev": "nodemon --legacy-watch 'src/**/*.ts' --exec 'ts-node' src/app.ts"
   },
   "dependencies": {
-    "@nestjs/common": "^7.0.0",
-    "@nestjs/core": "^7.0.0",
-    "@nestjs/platform-express": "^7.0.0",
-    "@nestjs/typeorm": "^7.0.0",
-    "mysql2": "^2.2.5",
-    "reflect-metadata": "^0.1.13",
-    "rxjs": "^6.5.4",
-    "typeorm": "^0.2.24"
+    "body-parser": "^1.20.2",
+    "express": "^4.19.2",
+    "mysql2": "^3.11.0",
+    "sequelize": "^6.37.3"
   },
   "devDependencies": {
-    "@nestjs/cli": "^7.0.0",
-    "@nestjs/schematics": "^7.0.0",
-    "@nestjs/testing": "^7.0.0",
-    "@types/node": "^13.9.2",
-    "@types/jest": "^25.2.1",
-    "ts-jest": "^25.2.1",
-    "ts-loader": "^6.2.1",
-    "ts-node": "^8.6.2",
-    "typescript": "^3.7.5",
-    "nodemon": "^2.0.7"
+    "@types/body-parser": "^1.19.5",
+    "@types/express": "^4.17.21",
+    "@types/node": "^22.1.0",
+    "nodemon": "^3.1.4",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.4"
   }
 }

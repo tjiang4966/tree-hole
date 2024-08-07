@@ -21,7 +21,6 @@ services:
       - "3001:3001"
     volumes:
       - ./backend:/app
-      - backend-node-modules:/app/node_modules
     environment:
       - NODE_ENV=development
       - MYSQL_HOST=mysql
