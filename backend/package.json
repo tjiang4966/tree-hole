@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node dist/app.js",
     "build": "tsc",
-    "start:dev": "nodemon src/app.ts"
+    "start:dev": "nodemon src/app.ts",
+    "init-db": "ts-node src/scripts/initDb.ts"
   },
   "keywords": [],
   "author": "",
