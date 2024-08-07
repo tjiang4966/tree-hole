@@ -23,6 +23,7 @@ services:
       - ./backend:/app
     environment:
       - NODE_ENV=development
+      - PORT=3001
       - MYSQL_HOST=mysql
       - MYSQL_USER=root
       - MYSQL_PASSWORD=rootpassword
