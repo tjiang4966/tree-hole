@@ -1,5 +1,30 @@
 // src/models/index.ts
 
-export { default as User } from './User';
-export { default as AcornBox } from './AcornBox';
-export { default as Reply } from './Reply';
+import User from './User';
+import AcornBox from './AcornBox';
+import Reply from './Reply';
+
+export {
+  User,
+  AcornBox,
+  Reply
+};
+
+// 你也可以选择默认导出所有模型
+export default {
+  User,
+  AcornBox,
+  Reply
+};
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     User:
+ *       $ref: '#/components/schemas/User'
+ *     AcornBox:
+ *       $ref: '#/components/schemas/AcornBox'
+ *     Reply:
+ *       $ref: '#/components/schemas/Reply'
+ */

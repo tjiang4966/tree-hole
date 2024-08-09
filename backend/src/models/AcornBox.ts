@@ -1,7 +1,45 @@
 // src/models/AcornBox.ts
-
 import mongoose, { Document, Schema } from 'mongoose';
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     AcornBox:
+ *       type: object
+ *       required:
+ *         - content
+ *         - author
+ *         - anonymousId
+ *       properties:
+ *         content:
+ *           type: string
+ *           description: The content of the acorn box
+ *         author:
+ *           type: string
+ *           description: The ID of the user who created the acorn box
+ *         anonymousId:
+ *           type: string
+ *           description: A unique anonymous identifier for the acorn box
+ *         status:
+ *           type: string
+ *           enum: [available, opened, deleted]
+ *           description: The current status of the acorn box
+ *         allowReplies:
+ *           type: boolean
+ *           description: Whether replies are allowed for this acorn box
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *           description: The date the acorn box was created
+ *         openedBy:
+ *           type: string
+ *           description: The ID of the user who opened the acorn box
+ *         openedAt:
+ *           type: string
+ *           format: date-time
+ *           description: The date the acorn box was opened
+ */
 export interface IAcornBox extends Document {
   content: string;                  // 橡果盒内容
   author: mongoose.Types.ObjectId;  // 作者的用户ID

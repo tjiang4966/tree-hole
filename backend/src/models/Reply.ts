@@ -1,7 +1,34 @@
 // src/models/Reply.ts
-
 import mongoose, { Document, Schema } from 'mongoose';
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Reply:
+ *       type: object
+ *       required:
+ *         - content
+ *         - acornBox
+ *         - author
+ *       properties:
+ *         content:
+ *           type: string
+ *           description: The content of the reply
+ *         acornBox:
+ *           type: string
+ *           description: The ID of the acorn box this reply belongs to
+ *         author:
+ *           type: string
+ *           description: The ID of the user who wrote the reply
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *           description: The date the reply was created
+ *         isRead:
+ *           type: boolean
+ *           description: Whether the reply has been read by the recipient
+ */
 export interface IReply extends Document {
   content: string;                  // 回复内容
   acornBox: mongoose.Types.ObjectId;  // 所属橡果盒ID
