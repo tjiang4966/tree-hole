@@ -66,6 +66,34 @@ export const openAcornBox = async (req: Request, res: Response) => {
   }
 };
 
+export const getUserAcornBoxes = async (req: Request, res: Response) => {
+  try {
+    const userId = req.user.id;  // Assuming the auth middleware attaches the user to the request
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 10;
+
+    const skip = (page - 1) * limit;
+
+    const acornBoxes = await AcornBox.find({ author: userId })
+      .sort({ createdAt: -1 })  // Sort by creation date, newest first
+      .skip(skip)
+      .limit(limit);
+
+    const totalAcornBoxes = await AcornBox.countDocuments({ author: userId });
+    const totalPages = Math.ceil(totalAcornBoxes / limit);
+
+    res.status(200).json({
+      acornBoxes,
+      currentPage: page,
+      totalPages,
+      totalAcornBoxes
+    });
+  } catch (error) {
+    console.error('Error in getUserAcornBoxes:', error);
+    res.status(500).json({ message: 'An error occurred while fetching user AcornBoxes' });
+  }
+};
+
 function generateAnonymousId() {
   // 实现生成匿名ID的逻辑
   return 'anon_' + Math.random().toString(36).substr(2, 9);

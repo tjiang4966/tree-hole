@@ -24,14 +24,6 @@ services:
       - "27017:27017"
     volumes:
       - mongodata:/data/db
-  
-  mongo_test:
-    image: mongo
-    ports:
-      - "27018:27017"
-    volumes:
-      - mongotestdata:/data/db
 
 volumes:
   mongodata:
-  mongotestdata:
