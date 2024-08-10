@@ -9,7 +9,8 @@
     "start:dev": "nodemon src/app.ts",
     "init-db": "ts-node src/scripts/initDb.ts",
     "generate-jwt-secret": "ts-node src/scripts/jwtGenerator.ts",
-    "test": "jest --runInBand --detectOpenHandles --forceExit"
+    "test": "jest --detectOpenHandles --force-exit",
+    "test:ci": "jest --ci"
   },
   "keywords": [],
   "author": "",

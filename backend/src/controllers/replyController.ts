@@ -1,10 +1,14 @@
 // src/controllers/replyController.ts
 import { Request, Response } from 'express';
 import { Reply, AcornBox } from '../models';
+import mongoose from 'mongoose';
 
 export const createReply = async (req: Request, res: Response) => {
   try {
     const { content, acornBoxId } = req.body;
+    if (!mongoose.Types.ObjectId.isValid(acornBoxId)) {
+      return res.status(400).json({ message: 'Invalid acorn box ID' });
+    }
     const author = req.user.id;
 
     const acornBox = await AcornBox.findById(acornBoxId);
