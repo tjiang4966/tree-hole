@@ -1,6 +1,7 @@
 // src/controllers/acornBoxController.ts
 import { Request, Response } from 'express';
 import { AcornBox } from '../models';
+import mongoose from 'mongoose';
 
 export const createAcornBox = async (req: Request, res: Response) => {
   try {
@@ -42,9 +43,12 @@ export const getRandomAcornBox = async (req: Request, res: Response) => {
 export const openAcornBox = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
+    if (mongoose.Types.ObjectId.isValid(id) === false) {
+      return res.status(400).json({ message: 'Invalid AcornBox ID' });
+    }
     const userId = req.user.id;
 
-    const acornBox = await AcornBox.findById(id);
+    const acornBox = await AcornBox.findById(`${id}`);
 
     if (!acornBox) {
       return res.status(404).json({ message: 'Acorn box not found' });
