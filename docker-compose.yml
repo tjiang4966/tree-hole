@@ -1,0 +1,36 @@
+version: '3'
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./backend:/usr/src/app
+    environment:
+      - NODE_ENV=development
+    depends_on:
+      - mongo
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./frontend:/app
+
+  mongo:
+    image: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodata:/data/db
+
+  mongo-test:
+    image: mongo
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongodata-test:/data/db
+volumes:
+  mongodata:
+  mongodata-test:
