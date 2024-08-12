@@ -2,37 +2,43 @@ version: '3'
 services:
   frontend:
     build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    ports:
-      - "8080:8080"
+      context: .
+      dockerfile: frontend/Dockerfile
     volumes:
       - ./frontend:/app
+      - ./shared:/app/shared
       - /app/node_modules
     environment:
       - NODE_ENV=development
+    ports:
+      - "8080:8080"
     command: npm run dev
+    depends_on:
+      - backend
 
   backend:
     build:
-      context: ./backend
-      dockerfile: Dockerfile
-    ports:
-      - "3000:3000"
+      context: .
+      dockerfile: backend/Dockerfile
     volumes:
       - ./backend:/app
+      - ./shared:/app/shared
       - /app/node_modules
     environment:
       - NODE_ENV=development
       - MONGODB_URI=mongodb://mongodb:27017/treehole
+    ports:
+      - "3000:3000"
     command: npm run dev
+    depends_on:
+      - mongodb
 
   mongodb:
     image: mongo:latest
-    ports:
-      - "27017:27017"
     volumes:
       - mongodb_data:/data/db
+    ports:
+      - "27017:27017"
 
 volumes:
   mongodb_data:
