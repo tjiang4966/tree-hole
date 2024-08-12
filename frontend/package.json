@@ -12,7 +12,8 @@
   "dependencies": {
     "vue": "^3.2.0",
     "vuex": "^4.0.0",
-    "vue-router": "^4.0.0"
+    "vue-router": "^4.0.0",
+    "@tree-hole/shared": "file:../shared"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.0.0",
