@@ -1,18 +1,18 @@
-// backend/src/app.ts
-
 import express from 'express';
+import swaggerUi from 'swagger-ui-express';
 import { connectDB } from './config/database';
 import routes from './routes';
+import { swaggerSpec } from './config/swagger';
 
 const app = express();
 
-// 连接数据库
 connectDB();
 
-// 中间件
 app.use(express.json());
 
-// 路由
+// Swagger UI
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
 app.use('/api', routes);
 
 // 错误处理中间件

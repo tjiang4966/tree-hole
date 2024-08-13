@@ -1,13 +1,44 @@
 import mongoose, { Document, Schema } from 'mongoose';
 import { User } from '@tree-hole/shared';
 
-// 内部使用的扩展接口，包含密码字段，并Omit Mongoose 的 _id
 interface InternalUser extends Omit<User, 'id'> {
   password: string;
 }
 
-// 文档接口，用于 Mongoose
 export interface UserDocument extends InternalUser, Document {}
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     User:
+ *       type: object
+ *       required:
+ *         - username
+ *         - email
+ *         - password
+ *       properties:
+ *         id:
+ *           type: string
+ *           description: The auto-generated id of the user
+ *         username:
+ *           type: string
+ *           description: The username of the user
+ *         email:
+ *           type: string
+ *           description: The email of the user
+ *         password:
+ *           type: string
+ *           description: The user's password (hashed)
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *           description: The date the user was added
+ *         updatedAt:
+ *           type: string
+ *           format: date-time
+ *           description: The date the user was updated
+ */
 
 const userSchema = new Schema<UserDocument>({
   username: { 
@@ -28,7 +59,6 @@ const userSchema = new Schema<UserDocument>({
   timestamps: true 
 });
 
-// 在返回用户信息时转换为符合 User 接口的格式
 userSchema.set('toJSON', {
   transform: (doc, ret) => {
     const user: User = {
@@ -38,9 +68,6 @@ userSchema.set('toJSON', {
       createdAt: ret.createdAt,
       updatedAt: ret.updatedAt
     };
-    delete ret._id;
-    delete ret.__v;
-    delete ret.password;
     return user;
   }
 });

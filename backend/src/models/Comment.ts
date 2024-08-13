@@ -8,6 +8,42 @@ interface InternalComment extends Omit<Comment, 'id' | 'author' | 'post'> {
 
 export interface CommentDocument extends InternalComment, Document {}
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Comment:
+ *       type: object
+ *       required:
+ *         - content
+ *         - author
+ *         - post
+ *       properties:
+ *         id:
+ *           type: string
+ *           description: The auto-generated id of the comment
+ *         content:
+ *           type: string
+ *           description: The content of the comment
+ *         author:
+ *           type: string
+ *           description: The id of the user who created the comment
+ *         post:
+ *           type: string
+ *           description: The id of the post this comment belongs to
+ *         likes:
+ *           type: number
+ *           description: The number of likes on the comment
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *           description: The date the comment was created
+ *         updatedAt:
+ *           type: string
+ *           format: date-time
+ *           description: The date the comment was last updated
+ */
+
 const commentSchema = new Schema<CommentDocument>({
   content: { 
     type: String, 
@@ -31,9 +67,6 @@ const commentSchema = new Schema<CommentDocument>({
   timestamps: true 
 });
 
-// 添加复合索引以优化查询性能
-commentSchema.index({ post: 1, createdAt: -1 });
-
 commentSchema.set('toJSON', {
   transform: (doc, ret) => {
     const comment: Comment = {
@@ -45,9 +78,6 @@ commentSchema.set('toJSON', {
       createdAt: ret.createdAt,
       updatedAt: ret.updatedAt
     };
-    // 明确删除 Mongoose 特有的字段
-    delete ret._id;
-    delete ret.__v;
     return comment;
   }
 });
