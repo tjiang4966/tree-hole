@@ -25,7 +25,15 @@ const router = express.Router();
  *             schema:
  *               $ref: '#/components/schemas/Comment'
  *       400:
- *         description: Invalid input
+ *         description: Bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Invalid post / 创建评论失败
  */
 router.post('/', commentController.createComment);
 
@@ -51,6 +59,8 @@ router.post('/', commentController.createComment);
  *               $ref: '#/components/schemas/Comment'
  *       404:
  *         description: The comment was not found
+ *       400:
+ *         description: Bad request
  */
 router.get('/:id', commentController.getComment);
 
@@ -83,7 +93,7 @@ router.get('/:id', commentController.getComment);
  *       404:
  *         description: The comment was not found
  *       400:
- *         description: Invalid input
+ *         description: Bad request
  */
 router.put('/:id', commentController.updateComment);
 
@@ -103,8 +113,18 @@ router.put('/:id', commentController.updateComment);
  *     responses:
  *       200:
  *         description: The comment was deleted
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: 评论删除成功
  *       404:
  *         description: The comment was not found
+ *       400:
+ *         description: Bad request
  */
 router.delete('/:id', commentController.deleteComment);
 
@@ -130,8 +150,8 @@ router.delete('/:id', commentController.deleteComment);
  *               type: array
  *               items:
  *                 $ref: '#/components/schemas/Comment'
- *       404:
- *         description: The post was not found
+ *       400:
+ *         description: Bad request
  */
 router.get('/posts/:postId/comments', commentController.getCommentsByPost);
 

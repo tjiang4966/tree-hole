@@ -68,7 +68,7 @@ describe('Comment API', () => {
     const res = await request.get(`/api/comments/${comment._id}`);
     expect(res.status).toBe(200);
     expect(res.body.content).toBe('Test comment content');
-    expect(res.body.author.username).toBe('testuser');
+    expect(res.body.author).toBe(testUser._id.toString());
   });
 
   it('should update a comment', async () => {
@@ -127,5 +127,71 @@ describe('Comment API', () => {
     expect(res.body).toHaveLength(2);
     expect(res.body[0].content).toBe('Test comment 2'); // Assuming sorted by latest
     expect(res.body[1].content).toBe('Test comment 1');
+  });
+
+  it('should not create a comment with empty content', async () => {
+    const res = await request.post('/api/comments').send({
+      content: '',
+      author: testUser._id,
+      post: testPost._id
+    });
+
+    expect(res.status).toBe(400);
+    expect(res.body).toHaveProperty('message');
+    expect(res.body.message).toContain('content is required');
+  });
+
+  it('should not create a comment with non-existent author', async () => {
+    const fakeId = new mongoose.Types.ObjectId();
+    const res = await request.post('/api/comments').send({
+      content: 'Test comment',
+      author: fakeId,
+      post: testPost._id
+    });
+
+    expect(res.status).toBe(400);
+    expect(res.body).toHaveProperty('message');
+    expect(res.body.message).toContain('Invalid author');
+  });
+
+  it('should not create a comment for non-existent post', async () => {
+    const fakeId = new mongoose.Types.ObjectId();
+    const res = await request.post('/api/comments').send({
+      content: 'Test comment',
+      author: testUser._id,
+      post: fakeId
+    });
+
+    expect(res.status).toBe(400);
+    expect(res.body).toHaveProperty('message');
+    expect(res.body.message).toContain('Invalid post');
+  });
+
+  it('should not update a non-existent comment', async () => {
+    const fakeId = new mongoose.Types.ObjectId();
+    const res = await request.put(`/api/comments/${fakeId}`).send({
+      content: 'Updated content'
+    });
+
+    expect(res.status).toBe(404);
+    expect(res.body).toHaveProperty('message');
+    expect(res.body.message).toBe('Comment not found');
+  });
+
+  it('should not delete a non-existent comment', async () => {
+    const fakeId = new mongoose.Types.ObjectId();
+    const res = await request.delete(`/api/comments/${fakeId}`);
+
+    expect(res.status).toBe(404);
+    expect(res.body).toHaveProperty('message');
+    expect(res.body.message).toBe('Comment not found');
+  });
+
+  it('should return empty array for comments of non-existent post', async () => {
+    const fakeId = new mongoose.Types.ObjectId();
+    const res = await request.get(`/api/posts/${fakeId}/comments`);
+
+    expect(res.status).toBe(200);
+    expect(res.body).toEqual([]);
   });
 });

@@ -3,10 +3,15 @@
 import { Request, Response } from 'express';
 import { PostModel } from '../models/Post';
 import { CreatePostDto, UpdatePostDto } from '@tree-hole/shared';
+import { UserModel } from '../models/User';
 
 export const postController = {
   async createPost(req: Request<{}, {}, CreatePostDto>, res: Response) {
     try {
+      const user = await UserModel.findById(req.body.author);
+      if (!user) {
+        return res.status(400).json({ message: 'Invalid author' });
+      }
       const post = new PostModel(req.body);
       await post.save();
       res.status(201).json(post.toJSON());

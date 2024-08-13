@@ -10,7 +10,8 @@
     "rootDir": "./src",
     "baseUrl": ".",
     "paths": {
-      "@tree-hole/shared": ["../shared/src"]
+      "@tree-hole/shared": ["../shared/src"],
+      "@/*": ["src/*"]
     }
   },
   "include": ["src/**/*"],

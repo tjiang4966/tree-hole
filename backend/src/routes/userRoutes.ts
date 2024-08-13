@@ -1,3 +1,5 @@
+// backend/src/routes/userRoutes.ts
+
 import express from 'express';
 import { userController } from '../controllers/userController';
 
@@ -23,7 +25,15 @@ const router = express.Router();
  *             schema:
  *               $ref: '#/components/schemas/User'
  *       400:
- *         description: Invalid input
+ *         description: Bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: 无效的电子邮件格式 / 密码必须至少包含8个字符 / 用户名或电子邮件已存在
  */
 router.post('/', userController.createUser);
 
@@ -49,6 +59,8 @@ router.post('/', userController.createUser);
  *               $ref: '#/components/schemas/User'
  *       404:
  *         description: The user was not found
+ *       400:
+ *         description: Bad request
  */
 router.get('/:id', userController.getUser);
 
@@ -81,7 +93,15 @@ router.get('/:id', userController.getUser);
  *       404:
  *         description: The user was not found
  *       400:
- *         description: Invalid input
+ *         description: Bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: 无效的电子邮件格式 / 密码必须至少包含8个字符 / 用户名或电子邮件已存在
  */
 router.put('/:id', userController.updateUser);
 
@@ -103,6 +123,8 @@ router.put('/:id', userController.updateUser);
  *         description: The user was deleted
  *       404:
  *         description: The user was not found
+ *       400:
+ *         description: Bad request
  */
 router.delete('/:id', userController.deleteUser);
 

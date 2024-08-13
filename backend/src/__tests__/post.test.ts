@@ -74,7 +74,7 @@ describe('Post API', () => {
     const res = await request.get(`/api/posts/${post._id}`);
     expect(res.status).toBe(200);
     expect(res.body.content).toBe('Test post content');
-    expect(res.body.author.username).toBe('testuser');
+    expect(res.body.author).toBe(testUser._id.toString());
   });
 
   it('should update a post', async () => {
@@ -104,5 +104,48 @@ describe('Post API', () => {
 
     const deletedPost = await PostModel.findById(post._id);
     expect(deletedPost).toBeNull();
+  });
+
+  it('should not create a post with empty content', async () => {
+    const res = await request.post('/api/posts').send({
+      content: '',
+      author: testUser._id
+    });
+
+    expect(res.status).toBe(400);
+    expect(res.body).toHaveProperty('message');
+    expect(res.body.message).toContain('content is required');
+  });
+
+  it('should not create a post with non-existent author', async () => {
+    const fakeId = new mongoose.Types.ObjectId();
+    const res = await request.post('/api/posts').send({
+      content: 'Test content',
+      author: fakeId
+    });
+
+    expect(res.status).toBe(400);
+    expect(res.body).toHaveProperty('message');
+    expect(res.body.message).toContain('Invalid author');
+  });
+
+  it('should not update a non-existent post', async () => {
+    const fakeId = new mongoose.Types.ObjectId();
+    const res = await request.put(`/api/posts/${fakeId}`).send({
+      content: 'Updated content'
+    });
+
+    expect(res.status).toBe(404);
+    expect(res.body).toHaveProperty('message');
+    expect(res.body.message).toBe('Post not found');
+  });
+
+  it('should not delete a non-existent post', async () => {
+    const fakeId = new mongoose.Types.ObjectId();
+    const res = await request.delete(`/api/posts/${fakeId}`);
+
+    expect(res.status).toBe(404);
+    expect(res.body).toHaveProperty('message');
+    expect(res.body.message).toBe('Post not found');
   });
 });

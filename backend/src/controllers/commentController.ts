@@ -8,6 +8,10 @@ import { CreateCommentDto, UpdateCommentDto } from '@tree-hole/shared';
 export const commentController = {
   async createComment(req: Request<{}, {}, CreateCommentDto>, res: Response) {
     try {
+      const post = await PostModel.findById(req.body.post);
+      if (!post) {
+        return res.status(400).json({ message: 'Invalid post' });
+      }
       const comment = new CommentModel(req.body);
       await comment.save();
       
