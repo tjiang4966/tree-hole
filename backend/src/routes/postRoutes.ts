@@ -1,7 +1,8 @@
-// backend/src/routes/commentRoutes.ts
+// backend/src/routes/postRoutes.ts
 
 import express from 'express';
-import { commentController } from '../controllers/commentController';
+import { postController } from '../controllers/postController';
+import { auth } from '../middleware/auth';
 
 const router = express.Router();
 
@@ -9,59 +10,65 @@ const router = express.Router();
  * @swagger
  * components:
  *   schemas:
- *     Comment:
+ *     Post:
  *       type: object
  *       required:
  *         - content
  *         - author
- *         - post
  *       properties:
  *         id:
  *           type: string
- *           description: 评论的自动生成ID
+ *           description: The auto-generated id of the post
  *         content:
  *           type: string
- *           description: 评论内容
+ *           description: The content of the post
  *         author:
  *           type: string
- *           description: 创建评论的用户ID
- *         post:
- *           type: string
- *           description: 评论所属帖子的ID
+ *           description: The id of the user who created the post
  *         likes:
  *           type: number
- *           description: 评论的点赞数
+ *           description: The number of likes on the post
+ *         comments:
+ *           type: number
+ *           description: The number of comments on the post
  *         createdAt:
  *           type: string
  *           format: date-time
- *           description: 评论创建时间
+ *           description: The date the post was created
  *         updatedAt:
  *           type: string
  *           format: date-time
- *           description: 评论最后更新时间
+ *           description: The date the post was last updated
  */
 
 /**
  * @swagger
- * /api/comments:
+ * /api/posts:
  *   post:
- *     summary: 创建新评论
- *     tags: [评论]
+ *     secirity:
+ *      - bearerAuth: []
+ *     summary: Create a new post
+ *     tags: [Posts]
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Comment'
+ *             type: object
+ *             required:
+ *               - content
+ *             properties:
+ *               content:
+ *                 type: string
  *     responses:
  *       201:
- *         description: 评论创建成功
+ *         description: The post was successfully created
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Comment'
+ *               $ref: '#/components/schemas/Post'
  *       400:
- *         description: 请求错误
+ *         description: Bad request
  *         content:
  *           application/json:
  *             schema:
@@ -69,126 +76,115 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: 无效的帖子 / 创建评论失败
+ *                   example: Invalid author
  */
-router.post('/', commentController.createComment);
+router.post('/', auth, postController.createPost);
 
 /**
  * @swagger
- * /api/comments/{id}:
+ * /api/posts:
  *   get:
- *     summary: 通过ID获取评论
- *     tags: [评论]
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: string
- *         required: true
- *         description: 评论ID
+ *     summary: Get all posts
+ *     tags: [Posts]
  *     responses:
  *       200:
- *         description: 成功获取评论
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Comment'
- *       404:
- *         description: 未找到评论
- *       400:
- *         description: 请求错误
- */
-router.get('/:id', commentController.getComment);
-
-/**
- * @swagger
- * /api/comments/{id}:
- *   put:
- *     summary: 更新评论
- *     tags: [评论]
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: string
- *         required: true
- *         description: 评论ID
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/Comment'
- *     responses:
- *       200:
- *         description: 评论更新成功
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Comment'
- *       404:
- *         description: 未找到评论
- *       400:
- *         description: 请求错误
- */
-router.put('/:id', commentController.updateComment);
-
-/**
- * @swagger
- * /api/comments/{id}:
- *   delete:
- *     summary: 删除评论
- *     tags: [评论]
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: string
- *         required: true
- *         description: 评论ID
- *     responses:
- *       200:
- *         description: 评论删除成功
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: 评论删除成功
- *       404:
- *         description: 未找到评论
- *       400:
- *         description: 请求错误
- */
-router.delete('/:id', commentController.deleteComment);
-
-/**
- * @swagger
- * /api/posts/{postId}/comments:
- *   get:
- *     summary: 获取指定帖子的所有评论
- *     tags: [评论]
- *     parameters:
- *       - in: path
- *         name: postId
- *         schema:
- *           type: string
- *         required: true
- *         description: 帖子ID
- *     responses:
- *       200:
- *         description: 成功获取帖子的评论列表
+ *         description: The list of the posts
  *         content:
  *           application/json:
  *             schema:
  *               type: array
  *               items:
- *                 $ref: '#/components/schemas/Comment'
+ *                 $ref: '#/components/schemas/Post'
  *       400:
- *         description: 请求错误
+ *         description: Bad request
  */
-router.get('/posts/:postId/comments', commentController.getCommentsByPost);
+router.get('/', postController.getAllPosts);
+
+/**
+ * @swagger
+ * /api/posts/{id}:
+ *   get:
+ *     summary: Get a post by id
+ *     tags: [Posts]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The post id
+ *     responses:
+ *       200:
+ *         description: The post description by id
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Post'
+ *       404:
+ *         description: The post was not found
+ *       400:
+ *         description: Bad request
+ */
+router.get('/:id', postController.getPost);
+
+/**
+ * @swagger
+ * /api/posts/{id}:
+ *   put:
+ *     secirity:
+ *      - bearerAuth: []
+ *     summary: Update a post
+ *     tags: [Posts]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The post id
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Post'
+ *     responses:
+ *       200:
+ *         description: The post was updated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Post'
+ *       404:
+ *         description: The post was not found
+ *       400:
+ *         description: Bad request
+ */
+router.put('/:id', auth, postController.updatePost);
+
+/**
+ * @swagger
+ * /api/posts/{id}:
+ *   delete:
+ *     secirity:
+ *      - bearerAuth: []
+ *     summary: Delete a post
+ *     tags: [Posts]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The post id
+ *     responses:
+ *       200:
+ *         description: The post was deleted
+ *       404:
+ *         description: The post was not found
+ *       400:
+ *         description: Bad request
+ */
+router.delete('/:id', auth, postController.deletePost);
 
 export default router;

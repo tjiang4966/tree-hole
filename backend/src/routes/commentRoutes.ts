@@ -2,6 +2,7 @@
 
 import express from 'express';
 import { commentController } from '../controllers/commentController';
+import { auth } from '../middleware/auth';
 
 const router = express.Router();
 
@@ -9,6 +10,8 @@ const router = express.Router();
  * @swagger
  * /api/comments:
  *   post:
+ *     security:
+ *       - bearerAuth: []
  *     summary: Create a new comment
  *     tags: [Comments]
  *     requestBody:
@@ -35,7 +38,7 @@ const router = express.Router();
  *                   type: string
  *                   example: Invalid post / 创建评论失败
  */
-router.post('/', commentController.createComment);
+router.post('/', auth, commentController.createComment);
 
 /**
  * @swagger
@@ -68,6 +71,8 @@ router.get('/:id', commentController.getComment);
  * @swagger
  * /api/comments/{id}:
  *   put:
+ *     security:
+ *       - bearerAuth: []
  *     summary: Update a comment
  *     tags: [Comments]
  *     parameters:
@@ -95,12 +100,14 @@ router.get('/:id', commentController.getComment);
  *       400:
  *         description: Bad request
  */
-router.put('/:id', commentController.updateComment);
+router.put('/:id', auth, commentController.updateComment);
 
 /**
  * @swagger
  * /api/comments/{id}:
  *   delete:
+ *     security:
+ *       - bearerAuth: []
  *     summary: Delete a comment
  *     tags: [Comments]
  *     parameters:
@@ -126,12 +133,14 @@ router.put('/:id', commentController.updateComment);
  *       400:
  *         description: Bad request
  */
-router.delete('/:id', commentController.deleteComment);
+router.delete('/:id', auth, commentController.deleteComment);
 
 /**
  * @swagger
  * /api/posts/{postId}/comments:
  *   get:
+ *     security:
+ *       - bearerAuth: []
  *     summary: Get all comments for a specific post
  *     tags: [Comments]
  *     parameters:
@@ -153,6 +162,6 @@ router.delete('/:id', commentController.deleteComment);
  *       400:
  *         description: Bad request
  */
-router.get('/posts/:postId/comments', commentController.getCommentsByPost);
+router.get('/posts/:postId/comments', auth, commentController.getCommentsByPost);
 
 export default router;

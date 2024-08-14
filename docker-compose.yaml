@@ -27,6 +27,7 @@ services:
     environment:
       - NODE_ENV=development
       - MONGODB_URI=mongodb://mongodb:27017/treehole
+      - JWT_SECRET=secret
     ports:
       - "3000:3000"
     command: npm run dev

@@ -14,6 +14,15 @@ const options: swaggerJsdoc.Options = {
         description: 'Development server',
       },
     ],
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+        },
+      },
+    },
   },
   apis: ['./src/routes/*.ts', './src/models/*.ts'], // 路径是相对于 backend 目录的
 };

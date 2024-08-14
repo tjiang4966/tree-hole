@@ -8,11 +8,14 @@ import { UserModel } from '../models/User';
 export const postController = {
   async createPost(req: Request<{}, {}, CreatePostDto>, res: Response) {
     try {
-      const user = await UserModel.findById(req.body.author);
-      if (!user) {
+      const author = req.user.id; // 假设我们已经通过中间件设置了 req.user
+      if (!author) {
         return res.status(400).json({ message: 'Invalid author' });
       }
-      const post = new PostModel(req.body);
+      const post = new PostModel({
+        ...req.body,
+        author,
+      });
       await post.save();
       res.status(201).json(post.toJSON());
     } catch (error) {
